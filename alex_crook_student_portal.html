@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Portal — Alex Crook Science Tutor</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0f2744;
+    --blue: #1e5fa8;
+    --sky: #e8f2fc;
+    --gold: #c8963a;
+    --gold-light: #f0c870;
+    --cream: #faf8f4;
+    --white: #ffffff;
+    --text: #1a2535;
+    --muted: #5a6a7e;
+    --border: #d8e4f0;
+    --green: #1a7a4a;
+    --green-bg: #e8f7ef;
+    --amber: #92660a;
+    --amber-bg: #fff4e5;
+    --red: #991b1b;
+    --red-bg: #fee2e2;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+
+  body { font-family: var(--sans); background: var(--navy); color: var(--text); min-height: 100vh; }
+
+  /* LOADING */
+  #loading-screen {
+    position: fixed; inset: 0; background: var(--navy);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 999; gap: 1.25rem;
+  }
+  .loader-logo { font-family: var(--serif); color: var(--white); font-size: 1.5rem; }
+  .loader-logo span { color: var(--gold-light); }
+  .loader-bar { width: 200px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+  .loader-bar-inner { height: 100%; width: 0; background: var(--gold); border-radius: 2px; transition: width 0.4s ease; }
+  .loader-text { color: rgba(255,255,255,0.45); font-size: 0.82rem; }
+
+  /* LOGIN */
+  #login-screen {
+    display: none; min-height: 100vh;
+    align-items: center; justify-content: center; padding: 2rem;
+  }
+  .login-box {
+    background: var(--white); border-radius: 16px; padding: 3rem;
+    width: 100%; max-width: 420px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.35); position: relative;
+  }
+  .login-box::before {
+    content: ''; position: absolute; top: 0; left: 2.5rem; right: 2.5rem;
+    height: 3px; background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .login-brand { text-align: center; margin-bottom: 2rem; }
+  .login-brand-name { font-family: var(--serif); font-size: 1.5rem; color: var(--navy); }
+  .login-brand-name span { color: var(--gold); }
+  .login-brand-sub { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.25rem; }
+  .login-title { font-size: 1.1rem; font-weight: 500; color: var(--navy); text-align: center; margin-bottom: 0.3rem; }
+  .login-sub { font-size: 0.88rem; color: var(--muted); text-align: center; margin-bottom: 2rem; font-weight: 300; }
+  .login-group { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 1rem; }
+  .login-group label { font-size: 0.82rem; font-weight: 500; color: var(--text); }
+  .login-group input {
+    border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem 1rem;
+    font-family: var(--sans); font-size: 0.95rem; color: var(--text);
+    background: var(--cream); outline: none; width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .login-group input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(30,95,168,0.1); }
+  .login-btn {
+    background: var(--navy); color: var(--white); border: none;
+    padding: 0.85rem; border-radius: 8px; font-family: var(--sans);
+    font-size: 1rem; font-weight: 500; cursor: pointer; width: 100%;
+    margin-top: 0.5rem; transition: background 0.2s;
+  }
+  .login-btn:hover { background: var(--blue); }
+  .login-error {
+    background: var(--red-bg); border: 1px solid #f5c1c1; color: var(--red);
+    font-size: 0.85rem; padding: 0.6rem 1rem; border-radius: 6px;
+    text-align: center; display: none; margin-bottom: 0.75rem;
+  }
+  .login-back { text-align: center; margin-top: 1.5rem; }
+  .login-back a { color: var(--muted); font-size: 0.85rem; text-decoration: none; }
+  .login-back a:hover { color: var(--blue); }
+
+  /* PORTAL */
+  #portal-screen { display: none; flex-direction: column; min-height: 100vh; background: var(--cream); }
+  .portal-nav {
+    background: var(--navy); padding: 0 5%; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .portal-nav-logo { font-family: var(--serif); color: var(--white); font-size: 1.05rem; }
+  .portal-nav-logo span { color: var(--gold-light); }
+  .portal-nav-right { display: flex; align-items: center; gap: 1.5rem; }
+  .portal-student-name { color: rgba(255,255,255,0.65); font-size: 0.88rem; }
+  .portal-logout {
+    background: none; border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.7); padding: 0.3rem 0.9rem; border-radius: 4px;
+    font-family: var(--sans); font-size: 0.82rem; cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .portal-logout:hover { border-color: var(--gold-light); color: var(--gold-light); }
+  .portal-body { padding: 3rem 5%; max-width: 1100px; margin: 0 auto; width: 100%; }
+  .portal-welcome { margin-bottom: 2.5rem; }
+  .portal-welcome h1 { font-family: var(--serif); font-size: 2rem; color: var(--navy); font-weight: 400; margin-bottom: 0.35rem; }
+  .portal-welcome p { color: var(--muted); font-weight: 300; }
+
+  /* exam banner */
+  .exam-banner {
+    border-radius: 12px; padding: 1.5rem 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap;
+  }
+  .exam-banner.urgent { background: #7f1d1d; }
+  .exam-banner.soon   { background: var(--navy); }
+  .exam-banner.normal { background: var(--navy); }
+  .exam-banner-left { display: flex; align-items: center; gap: 1.25rem; }
+  .exam-banner-icon { font-size: 2rem; flex-shrink: 0; }
+  .exam-banner-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold-light); font-weight: 500; margin-bottom: 0.2rem; }
+  .exam-banner-detail { color: var(--white); font-size: 1rem; }
+  .exam-banner-sub { color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-top: 0.15rem; }
+  .meet-btn {
+    background: #1a7a4a; color: var(--white); border: none;
+    padding: 0.7rem 1.5rem; border-radius: 6px; font-family: var(--sans);
+    font-size: 0.9rem; font-weight: 500; cursor: pointer; text-decoration: none;
+    transition: background 0.2s; white-space: nowrap; display: inline-block;
+  }
+  .meet-btn:hover { background: #155f3a; }
+  .meet-btn.disabled { opacity: 0.55; cursor: default; pointer-events: none; }
+
+  /* quick links */
+  .portal-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem; }
+  .portal-card {
+    background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.75rem; display: flex; flex-direction: column; gap: 0.75rem;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; cursor: pointer;
+  }
+  .portal-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(15,39,68,0.1); border-color: var(--blue); }
+  .portal-card.meet      { border-top: 3px solid var(--green); }
+  .portal-card.resources { border-top: 3px solid var(--blue); }
+  .portal-card.classroom { border-top: 3px solid #7c3aed; }
+  .portal-card-icon  { font-size: 2rem; line-height: 1; }
+  .portal-card-title { font-weight: 500; color: var(--navy); font-size: 1.05rem; }
+  .portal-card-desc  { color: var(--muted); font-size: 0.88rem; font-weight: 300; line-height: 1.6; flex: 1; }
+  .portal-card-action { font-size: 0.82rem; color: var(--blue); font-weight: 500; margin-top: 0.25rem; }
+
+  /* RAG tracker */
+  .section-title { font-family: var(--serif); font-size: 1.3rem; color: var(--navy); font-weight: 400; margin-bottom: 1rem; }
+  .rag-legend { display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+  .rag-legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.8rem; color: var(--muted); }
+  .rag-container { background: var(--white); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 2.5rem; }
+  .rag-subject-header { background: var(--navy); color: var(--white); padding: 0.75rem 1.5rem; font-size: 0.82rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; }
+  .rag-row { display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; padding: 0.85rem 1.5rem; border-bottom: 1px solid var(--border); gap: 1rem; }
+  .rag-row:last-child { border-bottom: none; }
+  .rag-code  { font-size: 0.8rem; font-weight: 500; color: var(--muted); }
+  .rag-name  { font-size: 0.92rem; color: var(--navy); }
+  .rag-pill  { padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-align: center; text-transform: uppercase; letter-spacing: 0.06em; }
+  .rag-R     { background: var(--red-bg);   color: var(--red);   }
+  .rag-A     { background: var(--amber-bg); color: var(--amber); }
+  .rag-G     { background: var(--green-bg); color: var(--green); }
+  .rag-empty { background: #f0f0f0; color: var(--muted); }
+
+  /* tasks */
+  .tasks-list { background: var(--white); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 2.5rem; }
+  .task-item { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border); }
+  .task-item:last-child { border-bottom: none; }
+  .task-info { flex: 1; }
+  .task-name { font-size: 0.95rem; color: var(--navy); }
+  .task-meta { font-size: 0.78rem; color: var(--muted); margin-top: 0.1rem; }
+  .task-badge { font-size: 0.72rem; padding: 0.2rem 0.6rem; border-radius: 3px; font-weight: 500; white-space: nowrap; }
+  .badge-not-started { background: #f0f0f0;        color: var(--muted);  }
+  .badge-in-progress { background: var(--amber-bg); color: var(--amber);  }
+  .badge-submitted   { background: var(--sky);      color: var(--blue);   }
+  .badge-reviewed    { background: var(--green-bg); color: var(--green);  }
+
+  /* submit */
+  .submit-area { background: var(--white); border: 1px solid var(--border); border-radius: 12px; padding: 2rem; margin-bottom: 2.5rem; }
+  .submit-area h3 { font-family: var(--serif); font-size: 1.2rem; color: var(--navy); font-weight: 400; margin-bottom: 0.4rem; }
+  .submit-area p  { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.25rem; font-weight: 300; }
+  .submit-form { display: flex; flex-direction: column; gap: 1rem; }
+  .submit-form select, .submit-form textarea {
+    border: 1px solid var(--border); border-radius: 6px; padding: 0.7rem 0.9rem;
+    font-family: var(--sans); font-size: 0.9rem; color: var(--text);
+    background: var(--cream); outline: none; width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .submit-form select:focus, .submit-form textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(30,95,168,0.1); }
+  .submit-form textarea { min-height: 100px; resize: vertical; }
+  .submit-btn {
+    background: var(--navy); color: var(--white); border: none;
+    padding: 0.75rem 1.5rem; border-radius: 6px; font-family: var(--sans);
+    font-size: 0.95rem; font-weight: 500; cursor: pointer; align-self: flex-start;
+    transition: background 0.2s;
+  }
+  .submit-btn:hover { background: var(--blue); }
+  .submit-success { background: var(--green-bg); border: 1px solid #a7f3c8; color: var(--green); padding: 0.75rem 1rem; border-radius: 6px; font-size: 0.9rem; display: none; }
+
+  /* states */
+  .empty-state { padding: 2rem 1.5rem; text-align: center; color: var(--muted); font-size: 0.9rem; font-weight: 300; }
+  .data-error  { padding: 0.85rem 1.25rem; color: var(--red); font-size: 0.85rem; background: var(--red-bg); border-radius: 6px; margin: 1rem 1.5rem; }
+
+  /* skeleton */
+  .skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 6px; display: block; }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+  @media (max-width: 640px) {
+    .portal-body { padding: 1.5rem 4%; }
+    .exam-banner { flex-direction: column; align-items: flex-start; }
+    .portal-grid { grid-template-columns: 1fr; }
+    .rag-row { grid-template-columns: 60px 1fr 70px; }
+    .login-box { padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading-screen">
+  <div class="loader-logo">Alex <span>Crook</span></div>
+  <div class="loader-bar"><div class="loader-bar-inner" id="loader-bar"></div></div>
+  <div class="loader-text" id="loader-text">Connecting to your portal...</div>
+</div>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-brand">
+      <div class="login-brand-name">Alex <span>Crook</span></div>
+      <div class="login-brand-sub">Science Tutor · Student Portal</div>
+    </div>
+    <p class="login-title">Welcome back</p>
+    <p class="login-sub">Sign in with the details Alex gave you.</p>
+    <div class="login-error" id="login-error">Name or password not recognised — check what Alex sent you.</div>
+    <div class="login-group">
+      <label for="login-name">Your first name</label>
+      <input type="text" id="login-name" placeholder="e.g. Jen" autocomplete="name">
+    </div>
+    <div class="login-group">
+      <label for="login-pass">Password</label>
+      <input type="password" id="login-pass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="login-btn" onclick="handleLogin()">Sign in →</button>
+    <div class="login-back"><a href="alex_crook_tutor_website.html">← Back to main site</a></div>
+  </div>
+</div>
+
+<!-- PORTAL -->
+<div id="portal-screen">
+  <nav class="portal-nav">
+    <div class="portal-nav-logo">Alex <span>Crook</span> · Student Portal</div>
+    <div class="portal-nav-right">
+      <span class="portal-student-name" id="nav-student-name"></span>
+      <button class="portal-logout" onclick="handleLogout()">Sign out</button>
+    </div>
+  </nav>
+
+  <div class="portal-body">
+    <div class="portal-welcome">
+      <h1 id="portal-greeting">Welcome back</h1>
+      <p id="portal-subtitle">Here's everything you need for your sessions with Alex.</p>
+    </div>
+
+    <div class="exam-banner soon" id="exam-banner">
+      <div class="exam-banner-left">
+        <div class="exam-banner-icon">📅</div>
+        <div>
+          <div class="exam-banner-label">Exam countdown</div>
+          <div class="exam-banner-detail" id="banner-exam-date">Loading...</div>
+          <div class="exam-banner-sub"  id="banner-subject"></div>
+        </div>
+      </div>
+      <a href="#" class="meet-btn" id="meet-banner-btn" target="_blank" rel="noopener">Join Google Meet →</a>
+    </div>
+
+    <div class="portal-grid">
+      <div class="portal-card meet" id="card-meet">
+        <div class="portal-card-icon">📹</div>
+        <div class="portal-card-title">Join Session</div>
+        <p class="portal-card-desc">Open Google Meet to join your tutoring session with Alex.</p>
+        <div class="portal-card-action">Open Google Meet →</div>
+      </div>
+      <div class="portal-card resources" id="card-drive">
+        <div class="portal-card-icon">📂</div>
+        <div class="portal-card-title">My Resources</div>
+        <p class="portal-card-desc">Access worksheets, revision materials and past papers shared by Alex.</p>
+        <div class="portal-card-action">Open Google Drive →</div>
+      </div>
+      <div class="portal-card classroom" id="card-classroom">
+        <div class="portal-card-icon">🏫</div>
+        <div class="portal-card-title">Google Classroom</div>
+        <p class="portal-card-desc">View assignments, receive feedback and track your progress.</p>
+        <div class="portal-card-action">Open Classroom →</div>
+      </div>
+    </div>
+
+    <div class="section-title">Your topic confidence tracker</div>
+    <div class="rag-legend">
+      <div class="rag-legend-item"><span class="rag-pill rag-R" style="padding:0.15rem 0.5rem">R</span> Not yet secure</div>
+      <div class="rag-legend-item"><span class="rag-pill rag-A" style="padding:0.15rem 0.5rem">A</span> Developing</div>
+      <div class="rag-legend-item"><span class="rag-pill rag-G" style="padding:0.15rem 0.5rem">G</span> Secure</div>
+      <div class="rag-legend-item"><span class="rag-pill rag-empty" style="padding:0.15rem 0.5rem">—</span> Not yet rated</div>
+    </div>
+    <div id="rag-container" class="rag-container">
+      <div class="empty-state"><span class="skeleton" style="width:55%;height:16px;margin:0 auto 0.6rem;display:block"></span><span class="skeleton" style="width:35%;height:14px;margin:0 auto;display:block"></span></div>
+    </div>
+
+    <div class="section-title">Your current tasks</div>
+    <div id="tasks-list" class="tasks-list">
+      <div class="empty-state"><span class="skeleton" style="width:65%;height:16px;margin:0 auto 0.6rem;display:block"></span><span class="skeleton" style="width:45%;height:14px;margin:0 auto;display:block"></span></div>
+    </div>
+
+    <div class="submit-area">
+      <h3>Send a note to Alex</h3>
+      <p>Let Alex know about work you've completed, anything you found tricky, or questions for your next session.</p>
+      <div class="submit-form">
+        <select id="submit-topic">
+          <option value="">Select a topic or task...</option>
+        </select>
+        <textarea id="submit-notes" placeholder="e.g. I've done Q1–5 on forces. I found Q3 on moments tricky — can we go over it next session?"></textarea>
+        <div class="submit-success" id="submit-success">✓ Note sent! Alex will see this before your next session.</div>
+        <button class="submit-btn" onclick="handleSubmit()">Send to Alex →</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── CONFIG — your four published Google Sheets CSV URLs ──────────────────────
+const SHEET_URLS = {
+  students: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRdNlQBkF3vz-r7-5bHGEeIDdZewvVIDQgAqqRID4NPFcXRk8cwLkn-ZkE7uX9Edg/pub?gid=1381917027&single=true&output=csv',
+  topics:   'https://docs.google.com/spreadsheets/d/e/2PACX-1vRdNlQBkF3vz-r7-5bHGEeIDdZewvVIDQgAqqRID4NPFcXRk8cwLkn-ZkE7uX9Edg/pub?gid=1410994103&single=true&output=csv',
+  tasks:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vRdNlQBkF3vz-r7-5bHGEeIDdZewvVIDQgAqqRID4NPFcXRk8cwLkn-ZkE7uX9Edg/pub?gid=1305795568&single=true&output=csv'
+};
+
+let allStudents = [], allTopics = [], allTasks = [];
+let currentStudent = null;
+
+// ── CSV PARSER ───────────────────────────────────────────────────────────────
+// Fully handles quoted fields containing commas and escaped quotes
+function parseCSV(text) {
+  const lines = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim().split('\n');
+  if (lines.length < 2) return [];
+  const headers = parseRow(lines[0]);
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    const vals = parseRow(lines[i]);
+    const obj = {};
+    headers.forEach((h, j) => { obj[h.trim()] = (vals[j] || '').trim(); });
+    if (Object.values(obj).some(v => v !== '')) rows.push(obj);
+  }
+  return rows;
+}
+
+function parseRow(line) {
+  const cols = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') {
+      if (inQ && line[i + 1] === '"') { cur += '"'; i++; }
+      else { inQ = !inQ; }
+    } else if (c === ',' && !inQ) {
+      cols.push(cur); cur = '';
+    } else {
+      cur += c;
+    }
+  }
+  cols.push(cur);
+  return cols;
+}
+
+// ── FETCH — cache-bust prevents stale Google Sheets responses ────────────────
+async function fetchSheet(url) {
+  const r = await fetch(url + '&cb=' + Date.now(), { cache: 'no-store' });
+  if (!r.ok) throw new Error('HTTP ' + r.status + ' fetching sheet');
+  return parseCSV(await r.text());
+}
+
+// ── LOADER ───────────────────────────────────────────────────────────────────
+function setLoader(pct, msg) {
+  document.getElementById('loader-bar').style.width = pct + '%';
+  document.getElementById('loader-text').textContent = msg;
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+async function init() {
+  try {
+    setLoader(20, 'Connecting to your data...');
+    allStudents = await fetchSheet(SHEET_URLS.students);
+    setLoader(55, 'Loading topics...');
+    allTopics   = await fetchSheet(SHEET_URLS.topics);
+    setLoader(80, 'Loading tasks...');
+    allTasks    = await fetchSheet(SHEET_URLS.tasks);
+    setLoader(100, 'Ready');
+    await delay(350);
+    show('loading-screen', false);
+    showFlex('login-screen');
+  } catch (e) {
+    setLoader(100, '⚠ Could not connect — check your internet connection and refresh the page.');
+    console.error(e);
+  }
+}
+
+// ── HELPERS ──────────────────────────────────────────────────────────────────
+const delay = ms => new Promise(r => setTimeout(r, ms));
+function show(id, visible = true) {
+  document.getElementById(id).style.display = visible ? 'block' : 'none';
+}
+function showFlex(id) {
+  const el = document.getElementById(id);
+  el.style.display = 'flex';
+}
+function openUrl(url, fallback) {
+  if (url) window.open(url, '_blank', 'noopener,noreferrer');
+  else alert(fallback);
+}
+
+// ── LOGIN ────────────────────────────────────────────────────────────────────
+function handleLogin() {
+  const name = document.getElementById('login-name').value.trim();
+  const pass = document.getElementById('login-pass').value.trim();
+  const err  = document.getElementById('login-error');
+
+  if (!name || !pass) {
+    err.textContent = 'Please enter your name and password.';
+    err.style.display = 'block';
+    return;
+  }
+
+  // Case-insensitive name match, exact password match
+  const student = allStudents.find(s =>
+    (s['Student Name'] || '').trim().toLowerCase() === name.toLowerCase() &&
+    (s['Portal Password'] || '').trim() === pass
+  );
+
+  if (!student) {
+    err.style.display = 'block';
+    return;
+  }
+
+  err.style.display = 'none';
+  currentStudent = student;
+  renderPortal(student);
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Enter') handleLogin(); });
+
+// ── LOGOUT ───────────────────────────────────────────────────────────────────
+function handleLogout() {
+  currentStudent = null;
+  ['login-name','login-pass'].forEach(id => document.getElementById(id).value = '');
+  show('portal-screen', false);
+  showFlex('login-screen');
+}
+
+// ── RENDER PORTAL ────────────────────────────────────────────────────────────
+function renderPortal(s) {
+  show('login-screen', false);
+  const ps = document.getElementById('portal-screen');
+  ps.style.display = 'flex';
+  ps.style.flexDirection = 'column';
+
+  document.getElementById('nav-student-name').textContent = s['Student Name'];
+  document.getElementById('portal-greeting').textContent  = 'Welcome back, ' + s['Student Name'] + '.';
+  document.getElementById('portal-subtitle').textContent  =
+    [s['Subject'], s['Tier'], s['Year Group']].filter(Boolean).join(' · ');
+
+  renderBanner(s);
+  renderCards(s);
+  renderRAG(s);
+  renderTasks(s);
+  renderSubmitDropdown(s);
+}
+
+// ── EXAM BANNER ──────────────────────────────────────────────────────────────
+function renderBanner(s) {
+  const banner  = document.getElementById('exam-banner');
+  const dateEl  = document.getElementById('banner-exam-date');
+  const subEl   = document.getElementById('banner-subject');
+  const meetBtn = document.getElementById('meet-banner-btn');
+
+  subEl.textContent = s['Subject'] || '';
+
+  // Parse exam date — handles "June 2025", "01/06/2025", "2025-06-01"
+  const raw = (s['Exam Date'] || '').trim();
+  if (raw) {
+    const parsed = new Date(raw);
+    const now    = new Date();
+    if (!isNaN(parsed)) {
+      const days = Math.ceil((parsed - now) / 86400000);
+      if (days <= 0)       { dateEl.textContent = 'Exams are happening now — good luck!'; banner.className = 'exam-banner urgent'; }
+      else if (days <= 14) { dateEl.textContent = days + ' day' + (days===1?'':'s') + ' until exams · ' + raw; banner.className = 'exam-banner urgent'; }
+      else if (days <= 30) { dateEl.textContent = days + ' days until exams · ' + raw; banner.className = 'exam-banner soon'; }
+      else                 { dateEl.textContent = 'Exams: ' + raw; banner.className = 'exam-banner normal'; }
+    } else {
+      dateEl.textContent = 'Exams: ' + raw;
+    }
+  } else {
+    dateEl.textContent = 'Exam date to be confirmed';
+  }
+
+  const meetUrl = (s['Meet URL'] || '').trim();
+  if (meetUrl) {
+    meetBtn.href = meetUrl;
+  } else {
+    meetBtn.textContent = 'Meet link coming soon';
+    meetBtn.classList.add('disabled');
+    meetBtn.href = '#';
+    meetBtn.addEventListener('click', e => e.preventDefault());
+  }
+}
+
+// ── QUICK LINK CARDS ─────────────────────────────────────────────────────────
+function renderCards(s) {
+  document.getElementById('card-meet').onclick = () =>
+    openUrl((s['Meet URL']||'').trim(), 'Your Google Meet link hasn\'t been added yet — ask Alex.');
+  document.getElementById('card-drive').onclick = () =>
+    openUrl((s['Drive Folder URL']||'').trim(), 'Your Google Drive folder hasn\'t been set up yet — ask Alex.');
+  document.getElementById('card-classroom').onclick = () =>
+    openUrl((s['Classroom URL']||'').trim(), 'Your Classroom link hasn\'t been added yet — ask Alex.');
+}
+
+// ── RAG TRACKER ──────────────────────────────────────────────────────────────
+function renderRAG(s) {
+  const container = document.getElementById('rag-container');
+  const name      = s['Student Name'].trim();
+  const subject   = (s['Subject'] || '').trim();
+
+  if (!allTopics.length) {
+    container.innerHTML = '<div class="empty-state">No topic data found.</div>';
+    return;
+  }
+
+  // Locate the column in Topics tab that matches this student's name
+  // Headers in Topics: Subject | Topic Code | Topic Name | Key Content | [Student names...]
+  const sampleRow = allTopics[0];
+  const studentCol = Object.keys(sampleRow).find(k =>
+    k.trim().toLowerCase() === name.toLowerCase()
+  );
+
+  // Filter topics by subject
+  let topics = allTopics;
+  if (subject === 'AQA Physics')    topics = allTopics.filter(t => (t['Topic Code']||'').startsWith('P'));
+  else if (subject === 'AQA Chemistry') topics = allTopics.filter(t => (t['Topic Code']||'').startsWith('C'));
+  // Combined Science, KS3 → show all
+
+  // Group by Subject column value
+  const groups = {};
+  topics.forEach(t => {
+    const g = t['Subject'] || 'Science';
+    if (!groups[g]) groups[g] = [];
+    groups[g].push(t);
+  });
+
+  let html = '';
+
+  if (!studentCol) {
+    html += `<div class="data-error">
+      ⚠ Your name wasn't found as a column header in the Topics tab of the Google Sheet.
+      Make sure column E is headed exactly "<strong>${name}</strong>" — spelling and spaces must match exactly.
+    </div>`;
+  }
+
+  Object.entries(groups).forEach(([grp, rows]) => {
+    html += `<div class="rag-subject-header">${grp}</div>`;
+    rows.forEach(t => {
+      const raw = studentCol ? (t[studentCol] || '').trim().toUpperCase() : '';
+      const rag = ['R','A','G'].includes(raw) ? raw : null;
+      const pillClass = rag ? 'rag-' + rag : 'rag-empty';
+      const pillText  = rag || '—';
+      html += `<div class="rag-row">
+        <div class="rag-code">${t['Topic Code'] || ''}</div>
+        <div class="rag-name">${t['Topic Name'] || ''}</div>
+        <div class="rag-pill ${pillClass}">${pillText}</div>
+      </div>`;
+    });
+  });
+
+  container.innerHTML = html || '<div class="empty-state">No topics found for your subject.</div>';
+}
+
+// ── TASKS ────────────────────────────────────────────────────────────────────
+function renderTasks(s) {
+  const name      = s['Student Name'].trim().toLowerCase();
+  const container = document.getElementById('tasks-list');
+
+  const myTasks = allTasks.filter(t =>
+    (t['Student'] || '').trim().toLowerCase() === name
+  );
+
+  if (!myTasks.length) {
+    container.innerHTML = '<div class="empty-state">No tasks set yet — check back after your next session with Alex.</div>';
+    return;
+  }
+
+  const badgeMap = {
+    'Not Started': 'badge-not-started',
+    'In Progress':  'badge-in-progress',
+    'Submitted':    'badge-submitted',
+    'Reviewed':     'badge-reviewed'
+  };
+
+  container.innerHTML = myTasks.map(t => {
+    const status = (t['Status'] || 'Not Started').trim();
+    const bc     = badgeMap[status] || 'badge-not-started';
+    const due    = t['Due Date'] ? ' · Due ' + t['Due Date'] : '';
+    return `<div class="task-item">
+      <div class="task-info">
+        <div class="task-name">${t['Task Name'] || 'Task'}</div>
+        <div class="task-meta">${t['Subject / Topic'] || ''}${due}</div>
+      </div>
+      <span class="task-badge ${bc}">${status}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── SUBMIT DROPDOWN ──────────────────────────────────────────────────────────
+function renderSubmitDropdown(s) {
+  const name = s['Student Name'].trim().toLowerCase();
+  const sel  = document.getElementById('submit-topic');
+
+  allTasks
+    .filter(t => (t['Student'] || '').trim().toLowerCase() === name)
+    .forEach(t => {
+      const o = document.createElement('option');
+      o.value = o.textContent = t['Task Name'] || 'Task';
+      sel.appendChild(o);
+    });
+
+  const gen = document.createElement('option');
+  gen.value = gen.textContent = 'General note / question for Alex';
+  sel.appendChild(gen);
+}
+
+// ── SUBMIT NOTE ──────────────────────────────────────────────────────────────
+// NOTE FOR ALEX: to make this actually send to you, create a Google Form with
+// fields "Student", "Topic", "Notes" and replace the URL below with your Form's
+// POST action URL. I'll build this for you when you're ready.
+function handleSubmit() {
+  const notes = document.getElementById('submit-notes').value.trim();
+  if (!notes) { alert('Please write a note before sending.'); return; }
+  document.getElementById('submit-success').style.display = 'block';
+  document.getElementById('submit-notes').value = '';
+  setTimeout(() => { document.getElementById('submit-success').style.display = 'none'; }, 5000);
+}
+
+// ── GO ───────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
