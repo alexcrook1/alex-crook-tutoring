@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alex Crook — Science Tutor</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0f2744;
+    --navy-mid: #1a3a5c;
+    --blue: #1e5fa8;
+    --blue-light: #3a7fd4;
+    --sky: #e8f2fc;
+    --gold: #c8963a;
+    --gold-light: #f0c870;
+    --cream: #faf8f4;
+    --white: #ffffff;
+    --text: #1a2535;
+    --muted: #5a6a7e;
+    --border: #d8e4f0;
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    color: var(--text);
+    background: var(--cream);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(15,39,68,0.97);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    height: 64px;
+  }
+
+  .nav-logo {
+    font-family: var(--serif);
+    color: var(--white);
+    font-size: 1.15rem;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+
+  .nav-logo span {
+    color: var(--gold-light);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold-light); }
+
+  .nav-cta {
+    background: var(--gold);
+    color: var(--navy) !important;
+    padding: 0.4rem 1.1rem;
+    border-radius: 4px;
+    font-weight: 500 !important;
+    color: var(--white) !important;
+    transition: background 0.2s !important;
+  }
+
+  .nav-cta:hover { background: var(--gold-light) !important; color: var(--navy) !important; }
+
+  .nav-student-login {
+    background: rgba(200,150,58,0.15);
+    border: 1px solid rgba(200,150,58,0.4);
+    color: var(--gold-light);
+    padding: 0.35rem 0.9rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+    transition: background 0.2s, border-color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .nav-student-login:hover {
+    background: rgba(200,150,58,0.3);
+    border-color: var(--gold-light);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    padding: 6rem 5% 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 55%;
+    height: 130%;
+    background: radial-gradient(ellipse at center, rgba(30,95,168,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(200,150,58,0.4), transparent);
+  }
+
+  .hero-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .hero-eyebrow {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.6rem, 4.5vw, 3.8rem);
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+  }
+
+  .hero h1 em {
+    color: var(--gold-light);
+    font-style: italic;
+  }
+
+  .hero-desc {
+    color: rgba(255,255,255,0.65);
+    font-size: 1.05rem;
+    margin-bottom: 2.25rem;
+    font-weight: 300;
+    max-width: 440px;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--navy);
+    padding: 0.8rem 1.8rem;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  .btn-outline {
+    border: 1px solid rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.85);
+    padding: 0.8rem 1.8rem;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, transform 0.15s;
+    display: inline-block;
+  }
+
+  .btn-outline:hover { border-color: var(--gold-light); color: var(--gold-light); transform: translateY(-1px); }
+
+  /* HERO STATS CARD */
+  .hero-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 2.5rem;
+    position: relative;
+  }
+
+  .hero-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 2rem; right: 2rem;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    border-radius: 2px;
+  }
+
+  .stat-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 2.4rem;
+    color: var(--gold-light);
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 0.35rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.75);
+    padding: 0.3rem 0.8rem;
+    border-radius: 3px;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+  }
+
+  /* SECTION SHARED */
+  section { padding: 6rem 5%; }
+
+  .section-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--blue);
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(1.9rem, 3vw, 2.6rem);
+    font-weight: 400;
+    color: var(--navy);
+    line-height: 1.25;
+    margin-bottom: 1rem;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 560px;
+    font-weight: 300;
+  }
+
+  /* ABOUT */
+  #about { background: var(--white); }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+    margin-top: 3.5rem;
+  }
+
+  .about-text p {
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+    font-weight: 300;
+    font-size: 1.02rem;
+  }
+
+  .about-text p strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .credentials {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cred-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.1rem 1.25rem;
+    background: var(--sky);
+    border-radius: 8px;
+    border-left: 3px solid var(--blue);
+  }
+
+  .cred-icon {
+    font-size: 1.3rem;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .cred-label {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--blue);
+    font-weight: 500;
+    margin-bottom: 0.15rem;
+  }
+
+  .cred-value {
+    font-size: 0.95rem;
+    color: var(--navy);
+    font-weight: 400;
+  }
+
+  /* SUBJECTS */
+  #subjects { background: var(--cream); }
+
+  .subjects-header {
+    margin-bottom: 3rem;
+  }
+
+  .subject-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .subject-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 2rem;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .subject-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(15,39,68,0.08);
+  }
+
+  .subject-card.featured {
+    border-color: var(--blue);
+    border-width: 2px;
+  }
+
+  .subject-badge {
+    position: absolute;
+    top: -1px; right: 1.5rem;
+    background: var(--blue);
+    color: var(--white);
+    font-size: 0.7rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0 0 4px 4px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .subject-ks {
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--blue);
+    margin-bottom: 0.5rem;
+  }
+
+  .subject-name {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    color: var(--navy);
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+  }
+
+  .subject-desc {
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.65;
+    font-weight: 300;
+    margin-bottom: 1.25rem;
+  }
+
+  .subject-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .meta-pill {
+    background: var(--sky);
+    color: var(--blue);
+    font-size: 0.75rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+
+  /* APPROACH */
+  #approach { background: var(--navy); }
+
+  #approach .section-label { color: var(--gold-light); }
+  #approach .section-label::before { background: var(--gold); }
+  #approach .section-title { color: var(--white); }
+  #approach .section-sub { color: rgba(255,255,255,0.55); }
+
+  .approach-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .approach-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 2rem;
+    transition: background 0.2s;
+  }
+
+  .approach-card:hover { background: rgba(255,255,255,0.08); }
+
+  .approach-num {
+    font-family: var(--serif);
+    font-size: 3rem;
+    color: rgba(200,150,58,0.3);
+    line-height: 1;
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .approach-title {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    color: var(--white);
+    margin-bottom: 0.75rem;
+    font-weight: 400;
+  }
+
+  .approach-text {
+    color: rgba(255,255,255,0.55);
+    font-size: 0.9rem;
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  .approach-highlight {
+    margin-top: 3rem;
+    background: rgba(200,150,58,0.1);
+    border: 1px solid rgba(200,150,58,0.25);
+    border-radius: 10px;
+    padding: 2rem 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .highlight-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+  }
+
+  .highlight-text {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    color: var(--gold-light);
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .highlight-text strong {
+    font-style: normal;
+    color: var(--white);
+    font-size: 0.85rem;
+    font-family: var(--sans);
+    display: block;
+    margin-top: 0.5rem;
+    color: rgba(255,255,255,0.5);
+    font-weight: 300;
+    letter-spacing: 0.04em;
+  }
+
+  /* CONTACT */
+  #contact { background: var(--white); }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    margin-top: 3.5rem;
+    align-items: start;
+  }
+
+  .contact-info p {
+    color: var(--muted);
+    font-weight: 300;
+    margin-bottom: 2rem;
+    font-size: 1.02rem;
+  }
+
+  .contact-detail {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    color: var(--muted);
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .contact-detail-icon {
+    width: 38px;
+    height: 38px;
+    background: var(--sky);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .form-group label {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: 0.03em;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.7rem 0.9rem;
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    color: var(--text);
+    background: var(--cream);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    outline: none;
+    width: 100%;
+  }
+
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(30,95,168,0.1);
+  }
+
+  .form-group textarea { resize: vertical; min-height: 120px; }
+
+  .form-submit {
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    padding: 0.9rem 2rem;
+    border-radius: 6px;
+    font-family: var(--sans);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    align-self: flex-start;
+  }
+
+  .form-submit:hover { background: var(--blue); transform: translateY(-1px); }
+
+  /* FOOTER */
+  footer {
+    background: var(--navy);
+    padding: 2.5rem 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .footer-logo {
+    font-family: var(--serif);
+    color: rgba(255,255,255,0.7);
+    font-size: 1rem;
+  }
+
+  .footer-logo span { color: var(--gold-light); }
+
+  .footer-copy {
+    color: rgba(255,255,255,0.35);
+    font-size: 0.8rem;
+  }
+
+  /* SESSIONS */
+  #sessions { background: var(--white); }
+
+  .sessions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    margin-top: 3.5rem;
+    align-items: start;
+  }
+
+  .session-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .session-block {
+    display: flex;
+    gap: 1.25rem;
+    padding: 1.4rem 0;
+    border-bottom: 1px solid var(--border);
+    align-items: flex-start;
+  }
+
+  .session-block:first-child { padding-top: 0; }
+  .session-block:last-child { border-bottom: none; }
+
+  .session-time {
+    background: var(--navy);
+    color: var(--gold-light);
+    font-family: var(--serif);
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.3rem 0.7rem;
+    border-radius: 4px;
+    flex-shrink: 0;
+    min-width: 68px;
+    text-align: center;
+    margin-top: 0.1rem;
+  }
+
+  .session-block-title {
+    font-weight: 500;
+    color: var(--navy);
+    margin-bottom: 0.2rem;
+    font-size: 0.98rem;
+  }
+
+  .session-block-desc {
+    color: var(--muted);
+    font-size: 0.88rem;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .session-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .session-info p {
+    color: var(--muted);
+    font-weight: 300;
+    font-size: 1.02rem;
+    line-height: 1.75;
+  }
+
+  .session-expectation {
+    background: var(--sky);
+    border-left: 3px solid var(--blue);
+    border-radius: 0 8px 8px 0;
+    padding: 1.25rem 1.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .session-expectation-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--blue);
+    margin-bottom: 0.4rem;
+  }
+
+  .session-expectation p {
+    color: var(--navy);
+    font-size: 0.95rem;
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero-inner, .about-grid, .contact-grid, .sessions-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .hero-card { display: none; }
+    .form-row { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    footer { flex-direction: column; gap: 0.75rem; text-align: center; }
+  }
+
+  /* SCROLL ANIMATIONS */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">Alex <span>Crook</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#subjects">Subjects</a></li>
+    <li><a href="#approach">Approach</a></li>
+    <li><a href="#sessions">Sessions</a></li>
+    <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+  </ul>
+  <a href="alex_crook_student_portal.html" class="nav-student-login">Student Login</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <p class="hero-eyebrow">Science Tutor · KS3 to KS5</p>
+      <h1>Science made simple, <em>confidence for exams.</em></h1>
+      <p class="hero-desc">Qualified science teacher with 10 years' experience, specialising in Physics and Combined Science for KS3–KS5. One-to-one tutoring tailored to your student, whatever stage they're at.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">Get in touch</a>
+        <a href="#subjects" class="btn-outline">What I teach</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="stat-grid">
+        <div class="stat">
+          <div class="stat-num">10+</div>
+          <div class="stat-label">Years teaching</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">KS3–5</div>
+          <div class="stat-label">All key stages</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">2yrs</div>
+          <div class="stat-label">Head of Science</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">1:1</div>
+          <div class="stat-label">Personalised sessions</div>
+        </div>
+      </div>
+      <div class="hero-tags">
+        <span class="tag">Physics Specialist</span>
+        <span class="tag">Combined Science</span>
+        <span class="tag">Foundation & Higher</span>
+        <span class="tag">All Major Boards</span>
+        <span class="tag">Online Tuition</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="section-label">About me</div>
+    <h2 class="section-title">A qualified teacher with a range of experience.</h2>
+    <p class="section-sub">Ten years in the classroom — including middle leadership — means I know how students learn.</p>
+
+    <div class="about-grid">
+      <div class="about-text fade-up">
+        <p>I'm a <strong>qualified science teacher</strong> with 10 years of experience across secondary and sixth form, specialising in Physics up to and including A-Level. I've held roles including Head of Science and Head of Year, and I'm currently teaching internationally.</p>
+        <p>I work with students across KS3, KS4 and KS5 — whether that's building solid foundations early on, developing understanding through the course, or intensive preparation in the final stretch before exams. Whatever stage your student is at, I'll meet them there and work at a pace that suits them.</p>
+        <p>While exam preparation is where I do some of my best work — helping students consolidate, close the gaps, and walk into the exam hall with real confidence — I'm equally happy supporting students earlier in their journey, across any year group or ability level.</p>
+      </div>
+      <div class="credentials fade-up">
+        <div class="cred-item">
+          <div class="cred-icon">🎓</div>
+          <div>
+            <div class="cred-label">Qualification</div>
+            <div class="cred-value">Qualified Science Teacher</div>
+          </div>
+        </div>
+        <div class="cred-item">
+          <div class="cred-icon">🔬</div>
+          <div>
+            <div class="cred-label">Specialism</div>
+            <div class="cred-value">Physics — up to and including A-Level</div>
+          </div>
+        </div>
+        <div class="cred-item">
+          <div class="cred-icon">📋</div>
+          <div>
+            <div class="cred-label">Leadership</div>
+            <div class="cred-value">Head of Science & Head of Year</div>
+          </div>
+        </div>
+        <div class="cred-item">
+          <div class="cred-icon">📅</div>
+          <div>
+            <div class="cred-label">Experience</div>
+            <div class="cred-value">10 years across secondary & sixth form</div>
+          </div>
+        </div>
+        <div class="cred-item">
+          <div class="cred-icon">🌍</div>
+          <div>
+            <div class="cred-label">Currently</div>
+            <div class="cred-value">Teaching internationally — tutoring online</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUBJECTS -->
+<section id="subjects">
+  <div class="section-inner">
+    <div class="subjects-header">
+      <div class="section-label">What I teach</div>
+      <h2 class="section-title">Science tuition, KS3 to KS5.</h2>
+      <p class="section-sub">Physics specialist with experience of Foundation and Higher tier. My strongest experience is with the AQA specification.</p>
+    </div>
+
+    <div class="subject-cards">
+      <div class="subject-card featured fade-up">
+        <div class="subject-badge">Most popular</div>
+        <div class="subject-ks">KS4 · GCSE</div>
+        <div class="subject-name">Combined Science</div>
+        <p class="subject-desc">Covering Biology, Chemistry and Physics across both Foundation and Higher tiers. Strong focus on past paper technique, command word skills and mark scheme logic.</p>
+        <div class="subject-meta">
+          <span class="meta-pill">Foundation</span>
+          <span class="meta-pill">Higher</span>
+          <span class="meta-pill">All major boards</span>
+        </div>
+      </div>
+
+      <div class="subject-card fade-up">
+        <div class="subject-ks">KS4 / KS5</div>
+        <div class="subject-name">Physics</div>
+        <p class="subject-desc">Physics is my specialism. From waves and forces at GCSE to mechanics and fields at A-Level. Sessions are precise, structured and designed to build real understanding — not just memorisation.</p>
+        <div class="subject-meta">
+          <span class="meta-pill">Foundation</span>
+          <span class="meta-pill">Higher</span>
+          <span class="meta-pill">A-Level on request</span>
+        </div>
+      </div>
+
+      <div class="subject-card fade-up">
+        <div class="subject-ks">KS3</div>
+        <div class="subject-name">KS3 Science</div>
+        <p class="subject-desc">Building the strong foundations that make GCSE science manageable. Sessions are conversational and confidence-focused — I want students to enjoy science, not just cope with it.</p>
+        <div class="subject-meta">
+          <span class="meta-pill">Ages 11–14</span>
+          <span class="meta-pill">GCSE Prep</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPROACH -->
+<section id="approach">
+  <div class="section-inner">
+    <div class="section-label">My approach</div>
+    <h2 class="section-title">Tutoring that adapts to the student.</h2>
+    <p class="section-sub">Every session is shaped by where the student is in their journey — not a fixed script.</p>
+
+    <div class="approach-grid">
+      <div class="approach-card fade-up">
+        <div class="approach-num">01</div>
+        <div class="approach-title">Conversational early on</div>
+        <p class="approach-text">With KS3 students or those earlier in KS4, I keep things relaxed. The goal is to make them feel comfortable asking questions, thinking out loud, and making mistakes without embarrassment.</p>
+      </div>
+      <div class="approach-card fade-up">
+        <div class="approach-num">02</div>
+        <div class="approach-title">Focused as exams approach</div>
+        <p class="approach-text">As the exam window gets closer, sessions shift: past papers, command word technique, mark scheme logic, and learning to work efficiently under timed conditions.</p>
+      </div>
+      <div class="approach-card fade-up">
+        <div class="approach-num">03</div>
+        <div class="approach-title">Targeted gap-closing</div>
+        <p class="approach-text">I don't waste time on what a student already knows. I find the gaps quickly and close them systematically — using the exam specification as the map.</p>
+      </div>
+    </div>
+
+    <div class="approach-highlight fade-up">
+      <div class="highlight-icon">⏱</div>
+      <div class="highlight-text">
+        "My sweet spot is the final three months before an exam. That's where focused, structured tutoring makes the biggest difference."
+        <strong>— Alex Crook</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SESSIONS -->
+<section id="sessions">
+  <div class="section-inner">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">What to expect from a session.</h2>
+    <p class="section-sub">Sessions are structured, purposeful and run for one hour over Google Meet.</p>
+
+    <div class="sessions-grid">
+      <div class="session-breakdown fade-up">
+        <div class="session-block">
+          <div class="session-time">0–15 min</div>
+          <div>
+            <div class="session-block-title">Instruction & explanation</div>
+            <p class="session-block-desc">We start with the topic — clear explanation, worked examples, and checking understanding before moving on.</p>
+          </div>
+        </div>
+        <div class="session-block">
+          <div class="session-time">15–45 min</div>
+          <div>
+            <div class="session-block-title">Guided tasks & practice</div>
+            <p class="session-block-desc">Students work through questions and problems with me on hand to guide, prompt and correct in real time.</p>
+          </div>
+        </div>
+        <div class="session-block">
+          <div class="session-time">45–60 min</div>
+          <div>
+            <div class="session-block-title">Questions & review</div>
+            <p class="session-block-desc">Time set aside for the student to ask anything, review what we've covered, and agree on what to practise before next time.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="session-info fade-up">
+        <p>Sessions take place over <strong>Google Meet</strong> and run for one hour. Everything you need — resources, tasks and meeting links — is available through your student portal before each session.</p>
+        <p>I share my screen, we work through problems together on shared documents, and students can ask questions at any point. It's designed to feel as close to sitting beside a teacher as an online session can.</p>
+        <div class="session-expectation">
+          <div class="session-expectation-label">Independent study</div>
+          <p>There will be an expectation for students to complete some tasks between sessions. This isn't busywork — it's targeted practice based on what we've covered, and it's what makes the sessions actually stick.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="section-label">Get in touch</div>
+    <h2 class="section-title">Not sure if I'm the right fit?</h2>
+    <p class="section-sub">Send a message and we'll have a quick chat. No commitment — just a conversation.</p>
+
+    <div class="contact-grid">
+      <div class="contact-info fade-up">
+        <p>I'm particularly interested in working with KS4 students and those with upcoming exams. If that sounds like your student, get in touch and I'll get back to you promptly.</p>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📧</div>
+          <span>alexcrook1@googlemail.com</span>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">🕐</div>
+          <span>Usually replies within 24 hours</span>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">💻</div>
+          <span>All sessions online via Google Meet</span>
+        </div>
+      </div>
+
+      <form class="contact-form fade-up" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Your name</label>
+            <input type="text" id="name" placeholder="Jane Smith" required>
+          </div>
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" id="email" placeholder="jane@email.com" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="subject">Subject needed</label>
+            <select id="subject">
+              <option value="">Select a subject...</option>
+              <option>Combined Science</option>
+              <option>Physics</option>
+              <option>KS3 Science</option>
+              <option>A-Level Physics</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="tier">Tier / year group</label>
+            <select id="tier">
+              <option value="">Select...</option>
+              <option>KS3 (Year 7–9)</option>
+              <option>GCSE Foundation</option>
+              <option>GCSE Higher</option>
+              <option>A-Level</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="message">Tell me a bit about your student</label>
+          <textarea id="message" placeholder="e.g. Year 11, sitting GCSEs in May, struggling with waves and electricity..."></textarea>
+        </div>
+        <button type="submit" class="form-submit">Send message →</button>
+        <div id="form-success" style="display:none; color: #1e5fa8; font-size: 0.9rem; padding: 0.5rem 0;">
+          ✓ Message sent! I'll be in touch within 24 hours.
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Alex <span>Crook</span> — Science Tutor</div>
+  <div class="footer-copy">Physics & Combined Science · KS3–KS5 · Online</div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    document.getElementById('form-success').style.display = 'block';
+    e.target.querySelector('.form-submit').disabled = true;
+    e.target.querySelector('.form-submit').textContent = 'Sent ✓';
+  }
+</script>
+</body>
+</html>
